@@ -1,0 +1,130 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+
+    <!-- Bootstrap 5.0.2 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/blog">Blog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/create/form">Create</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="m-4">
+        <h3>List User</h3>
+        <table class="table w-75 m-auto text-center">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Họ</th>
+                    <th scope="col">Tên</th>
+                    <th scope="col">Control</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% dataUser.forEach(function(item, i) { %>
+                    <tr>
+                        <th scope="row">
+                            <%= i+1 %>
+                        </th>
+                        <td>
+                            <%= item.Ho %>
+                        </td>
+                        <td>
+                            <%= item.Ten %>
+                        </td>
+                        <td>
+                            <a href="/update/<%= item.ID %>" class="btn btn-primary">Sửa</a>
+
+                            <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                                data-id="<%= item.ID %>">Xóa</a>
+                        </td>
+                    </tr>
+                    <% }); %>
+            </tbody>
+        </table>
+    </div>
+
+
+    <!-- Modal delete-->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    User này sẽ không thể khôi phục khi bạn đã xóa
+                </div>
+                <div class="modal-footer">
+                    <a id="btn_delete" class="btn btn-danger" data-bs-dismiss="modal">Xóa ngay</a>
+                    <a class="btn btn-secondary" data-bs-dismiss="modal">Hủy</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form to sent Metthod POST and override query ?_method=DELETE -->
+    <form name="delete_form" method="POST"></form>
+
+    <script>
+        //Lấy ra thẻ FORM
+        const delete_form = document.forms['delete_form']
+
+        var exampleModal = document.getElementById('exampleModal')
+
+        //Get id delete
+        var recipientId;
+
+        exampleModal.addEventListener('show.bs.modal', function (event) {
+
+            // Button that triggered the modal
+            var button = event.relatedTarget
+            console.log('BUTTON: ', button)
+
+            // Extract info from data-bs-* attributes
+            recipientId = button.getAttribute('data-id')
+            console.log('receptionId: ', recipientId)
+
+            //Gắn action cho Form
+            delete_form.action = `/delete/${recipientId}?_method=DELETE`
+            console.log('delete_form 222: ', delete_form)
+        })
+
+        // Update the modal's content.
+        var btn_delete = document.getElementById('btn_delete')
+        console.log('btn_delete: ', btn_delete)
+
+
+        btn_delete.onclick = function () {
+            delete_form.submit();
+        }
+
+    </script>
+
+</body>
+
+</html>
